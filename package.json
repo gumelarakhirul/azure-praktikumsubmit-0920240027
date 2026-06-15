@@ -1,0 +1,25 @@
+{
+  "name": "praktikumsubmit-0920240027",
+  "version": "1.0.0",
+  "description": "Aplikasi PraktikumSubmit Azure Cloud Service",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "azure",
+    "mysql",
+    "blob-storage",
+    "nodejs"
+  ],
+  "author": "Gumelar Akhirul Ramadhan - 0920240027",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/storage-blob": "^12.25.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.5"
+  }
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PraktikumSubmit 0920240027</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 40px;
+    }
+
+    .container {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0078d4;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #0078d4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #005a9e;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>PraktikumSubmit</h2>
+
+    <form action="/submit-task" method="POST" enctype="multipart/form-data">
+      <label>NIM</label>
+      <input type="text" name="nim" value="0920240027" required>
+
+      <label>Nama</label>
+      <input type="text" name="name" value="Gumelar Akhirul Ramadhan" required>
+
+      <label>Kelas</label>
+      <input type="text" name="kelas" value="TRPL 2B" required>
+
+      <label>Mata Kuliah</label>
+      <select name="course" required>
+        <option value="Cloud Computing">Cloud Computing</option>
+        <option value="Basis Data">Basis Data</option>
+        <option value="Pemrograman Web">Pemrograman Web</option>
+      </select>
+
+      <label>Upload File Tugas</label>
+      <input type="file" name="file" required>
+
+      <button type="submit">Kumpulkan Tugas</button>
+    </form>
+
+    <% if (message) { %>
+      <div class="message"><%= message %></div>
+    <% } %>
+
+    <div class="link">
+      <a href="/task-list">Lihat Daftar Tugas</a>
+    </div>
+  </div>
+
+</body>
+</html>
