@@ -18,8 +18,8 @@ const dbConfig = {
   database: process.env.DB_NAME,
   port: 3306,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 };
 
 app.get("/", (req, res) => {
@@ -36,7 +36,7 @@ app.post("/submit-task", upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.render("index", {
       message: null,
-      error: "File tugas wajib diupload."
+      error: "File tugas wajib diupload.",
     });
   }
 
@@ -54,8 +54,8 @@ app.post("/submit-task", upload.single("file"), async (req, res) => {
 
     await blockBlobClient.uploadData(req.file.buffer, {
       blobHTTPHeaders: {
-        blobContentType: req.file.mimetype
-      }
+        blobContentType: req.file.mimetype,
+      },
     });
 
     const fileUrl = blockBlobClient.url;
@@ -73,14 +73,14 @@ app.post("/submit-task", upload.single("file"), async (req, res) => {
 
     res.render("index", {
       message: "Tugas berhasil dikumpulkan.",
-      error: null
+      error: null,
     });
   } catch (error) {
     console.error(error);
 
     res.render("index", {
       message: null,
-      error: "Terjadi kesalahan: " + error.message
+      error: "Terjadi kesalahan: " + error.message,
     });
   }
 });
