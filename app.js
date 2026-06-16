@@ -27,14 +27,17 @@ app.get("/", (req, res) => {
 });
 
 app.get("/submit-task", (req, res) => {
-  res.render("index", { message: null });
+  res.render("index", { message: null, error: null });
 });
 
 app.post("/submit-task", upload.single("file"), async (req, res) => {
   const { nim, name, kelas, course } = req.body;
 
   if (!req.file) {
-    return res.render("index", { message: "File tugas wajib diupload!" });
+    return res.render("index", {
+      message: null,
+      error: "File tugas wajib diupload."
+    });
   }
 
   try {
@@ -69,12 +72,15 @@ app.post("/submit-task", upload.single("file"), async (req, res) => {
     await connection.end();
 
     res.render("index", {
-      message: "Tugas berhasil dikumpulkan!"
+      message: "Tugas berhasil dikumpulkan.",
+      error: null
     });
   } catch (error) {
     console.error(error);
+
     res.render("index", {
-      message: "Terjadi error: " + error.message
+      message: null,
+      error: "Terjadi kesalahan: " + error.message
     });
   }
 });
@@ -89,53 +95,7 @@ app.get("/task-list", async (req, res) => {
 
     await connection.end();
 
-    res.send(`
-      <html>
-      <head>
-        <title>Daftar Tugas</title>
-        <style>
-          body { font-family: Arial; padding: 30px; background: #f4f6f8; }
-          table { width: 100%; border-collapse: collapse; background: white; }
-          th, td { border: 1px solid #ddd; padding: 10px; }
-          th { background: #0078d4; color: white; }
-          a { color: #0078d4; }
-        </style>
-      </head>
-      <body>
-        <h2>Daftar Pengumpulan Tugas</h2>
-        <table>
-          <tr>
-            <th>ID</th>
-            <th>NIM</th>
-            <th>Nama</th>
-            <th>Kelas</th>
-            <th>Mata Kuliah</th>
-            <th>Status</th>
-            <th>Waktu Submit</th>
-            <th>File</th>
-          </tr>
-          ${rows
-            .map(
-              (row) => `
-              <tr>
-                <td>${row.id}</td>
-                <td>${row.nim}</td>
-                <td>${row.name}</td>
-                <td>${row.class}</td>
-                <td>${row.course}</td>
-                <td>${row.status}</td>
-                <td>${row.submitted_at}</td>
-                <td><a href="${row.file_url}" target="_blank">Download</a></td>
-              </tr>
-            `
-            )
-            .join("")}
-        </table>
-        <br>
-        <a href="/submit-task">Kembali ke Form</a>
-      </body>
-      </html>
-    `);
+    res.render("task-list", { rows });
   } catch (error) {
     res.send("Error: " + error.message);
   }

@@ -1,105 +1,108 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>PraktikumSubmit 0920240027</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 40px;
-    }
+require("dotenv").config();
 
-    .container {
-      background: white;
-      max-width: 500px;
-      margin: auto;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+const express = require("express");
+const multer = require("multer");
+const mysql = require("mysql2/promise");
+const { BlobServiceClient } = require("@azure/storage-blob");
 
-    h2 {
-      text-align: center;
-      color: #0078d4;
-    }
+const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-    }
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
 
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      box-sizing: border-box;
-    }
+const dbConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: 3306,
+  ssl: {
+    rejectUnauthorized: false
+  }
+};
 
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
-      background: #0078d4;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
+app.get("/", (req, res) => {
+  res.redirect("/submit-task");
+});
 
-    button:hover {
-      background: #005a9e;
-    }
+app.get("/submit-task", (req, res) => {
+  res.render("index", { message: null, error: null });
+});
 
-    .message {
-      margin-top: 15px;
-      text-align: center;
-      color: green;
-      font-weight: bold;
-    }
+app.post("/submit-task", upload.single("file"), async (req, res) => {
+  const { nim, name, kelas, course } = req.body;
 
-    .link {
-      text-align: center;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
+  if (!req.file) {
+    return res.render("index", {
+      message: null,
+      error: "File tugas wajib diupload."
+    });
+  }
 
-  <div class="container">
-    <h2>PraktikumSubmit</h2>
+  try {
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
 
-    <form action="/submit-task" method="POST" enctype="multipart/form-data">
-      <label>NIM</label>
-      <input type="text" name="nim" value="0920240027" required>
+    const containerClient = blobServiceClient.getContainerClient(
+      process.env.CONTAINER_NAME
+    );
 
-      <label>Nama</label>
-      <input type="text" name="name" value="Gumelar Akhirul Ramadhan" required>
+    const fileName = `${nim}_${Date.now()}_${req.file.originalname}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
 
-      <label>Kelas</label>
-      <input type="text" name="kelas" value="TRPL 2B" required>
+    await blockBlobClient.uploadData(req.file.buffer, {
+      blobHTTPHeaders: {
+        blobContentType: req.file.mimetype
+      }
+    });
 
-      <label>Mata Kuliah</label>
-      <select name="course" required>
-        <option value="Cloud Computing">Cloud Computing</option>
-        <option value="Basis Data">Basis Data</option>
-        <option value="Pemrograman Web">Pemrograman Web</option>
-      </select>
+    const fileUrl = blockBlobClient.url;
 
-      <label>Upload File Tugas</label>
-      <input type="file" name="file" required>
+    const connection = await mysql.createConnection(dbConfig);
 
-      <button type="submit">Kumpulkan Tugas</button>
-    </form>
+    await connection.execute(
+      `INSERT INTO submissions 
+      (nim, name, class, course, file_url, status, submitted_at)
+      VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+      [nim, name, kelas, course, fileUrl, "Submitted"]
+    );
 
-    <% if (message) { %>
-      <div class="message"><%= message %></div>
-    <% } %>
+    await connection.end();
 
-    <div class="link">
-      <a href="/task-list">Lihat Daftar Tugas</a>
-    </div>
-  </div>
+    res.render("index", {
+      message: "Tugas berhasil dikumpulkan.",
+      error: null
+    });
+  } catch (error) {
+    console.error(error);
 
-</body>
-</html>
+    res.render("index", {
+      message: null,
+      error: "Terjadi kesalahan: " + error.message
+    });
+  }
+});
+
+app.get("/task-list", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    const [rows] = await connection.execute(
+      "SELECT * FROM submissions ORDER BY submitted_at DESC"
+    );
+
+    await connection.end();
+
+    res.render("task-list", { rows });
+  } catch (error) {
+    res.send("Error: " + error.message);
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server berjalan di port ${PORT}`);
+});
