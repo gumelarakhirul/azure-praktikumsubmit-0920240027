@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Tugas - PraktikumSubmit</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f3f6fb;
+      color: #111827;
+    }
+
+    .navbar {
+      height: 72px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 22px;
+      color: #0f172a;
+    }
+
+    .brand span {
+      color: #2563eb;
+    }
+
+    .nav-link {
+      color: #2563eb;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 46px 48px 72px;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+    }
+
+    .hero-badge {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      color: #dbeafe;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 36px;
+    }
+
+    .hero p {
+      color: #dbeafe;
+      margin-top: 10px;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: -40px auto 48px;
+      padding: 0 28px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      border: 1px solid #eef2f7;
+      padding: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .item {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .item span {
+      display: block;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .item strong {
+      color: #0f172a;
+      font-size: 16px;
+      word-break: break-word;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: #ecfdf5;
+      color: #047857;
+      font-weight: 800;
+    }
+
+    .actions {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 22px; }
+      .hero { padding: 36px 22px 64px; }
+      .grid { grid-template-columns: 1fr; }
+      .content { padding: 0 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="brand">Praktikum<span>Submit</span></div>
+    <a class="nav-link" href="/task-list">Kembali ke Dashboard</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">Detail Pengumpulan</div>
+    <h1>Detail Tugas Mahasiswa</h1>
+    <p>Informasi lengkap data pengumpulan tugas mahasiswa.</p>
+  </section>
+
+  <main class="content">
+    <div class="card">
+      <div class="grid">
+        <div class="item">
+          <span>ID Pengumpulan</span>
+          <strong><%= task.id %></strong>
+        </div>
+
+        <div class="item">
+          <span>NIM</span>
+          <strong><%= task.nim %></strong>
+        </div>
+
+        <div class="item">
+          <span>Nama Mahasiswa</span>
+          <strong><%= task.name %></strong>
+        </div>
+
+        <div class="item">
+          <span>Kelas</span>
+          <strong><%= task.class %></strong>
+        </div>
+
+        <div class="item">
+          <span>Mata Kuliah</span>
+          <strong><%= task.course %></strong>
+        </div>
+
+        <div class="item">
+          <span>Status</span>
+          <strong class="status"><%= task.status %></strong>
+        </div>
+
+        <div class="item">
+          <span>Waktu Submit</span>
+          <strong><%= task.submitted_at %></strong>
+        </div>
+
+        <div class="item">
+          <span>File URL</span>
+          <strong><%= task.file_url %></strong>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="<%= task.file_url %>" target="_blank">Download File</a>
+        <a class="btn btn-secondary" href="/task-list">Kembali</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

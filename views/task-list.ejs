@@ -281,7 +281,8 @@
                   <td><span class="status"><%= row.status %></span></td>
                   <td><%= row.submitted_at %></td>
                   <td>
-                    <a class="download" href="<%= row.file_url %>" target="_blank">Download</a>
+                  <a class="download" href="/task-detail/<%= row.id %>">Detail</a>
+                  <a class="download" href="<%= row.file_url %>" target="_blank">Download</a>
                   </td>
                 </tr>
               <% }) %>

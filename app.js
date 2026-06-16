@@ -22,6 +22,9 @@ const dbConfig = {
   },
 };
 
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "admin0920240027";
+
 app.get("/", (req, res) => {
   res.redirect("/submit-task");
 });
@@ -85,6 +88,22 @@ app.post("/submit-task", upload.single("file"), async (req, res) => {
   }
 });
 
+app.get("/admin-login", (req, res) => {
+  res.render("admin-login", { error: null });
+});
+
+app.post("/admin-login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    return res.redirect("/task-list");
+  }
+
+  res.render("admin-login", {
+    error: "Username atau password admin salah.",
+  });
+});
+
 app.get("/task-list", async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
@@ -96,6 +115,29 @@ app.get("/task-list", async (req, res) => {
     await connection.end();
 
     res.render("task-list", { rows });
+  } catch (error) {
+    res.send("Error: " + error.message);
+  }
+});
+
+app.get("/task-detail/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const connection = await mysql.createConnection(dbConfig);
+
+    const [rows] = await connection.execute(
+      "SELECT * FROM submissions WHERE id = ?",
+      [id]
+    );
+
+    await connection.end();
+
+    if (rows.length === 0) {
+      return res.send("Data pengumpulan tidak ditemukan.");
+    }
+
+    res.render("task-detail", { task: rows[0] });
   } catch (error) {
     res.send("Error: " + error.message);
   }

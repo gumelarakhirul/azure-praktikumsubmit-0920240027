@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Admin - PraktikumSubmit</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111827;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 34px;
+      box-shadow: 0 24px 55px rgba(15, 23, 42, 0.28);
+    }
+
+    .badge {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #0f172a;
+    }
+
+    p {
+      margin: 10px 0 26px;
+      color: #64748b;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 7px;
+      font-weight: 800;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.13);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      border: none;
+      border-radius: 13px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .error {
+      margin-top: 18px;
+      padding: 13px;
+      border-radius: 12px;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .back {
+      margin-top: 22px;
+      text-align: center;
+    }
+
+    .back a {
+      color: #2563eb;
+      font-weight: 800;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-card">
+    <div class="badge">Admin Area</div>
+    <h1>Login Admin</h1>
+    <p>Masuk untuk melihat dashboard pengumpulan tugas PraktikumSubmit.</p>
+
+    <form action="/admin-login" method="POST">
+      <label>Username</label>
+      <input type="text" name="username" placeholder="Masukkan username" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Masukkan password" required>
+
+      <button type="submit">Masuk Dashboard</button>
+    </form>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+
+    <div class="back">
+      <a href="/submit-task">Kembali ke Form Submit</a>
+    </div>
+  </div>
+</body>
+</html>
